@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="项目名称" basedir="." default="sshexec">
+	<description>本配置文件供ANT编译项目、自动进行单元测试、打包并部署之用。</description>
+	<description>默认操作(输入命令：ant)为编译源程序并发布运行。</description>
+
+	<!--属性设置-->
+	<property environment="env" />
+	<property file="build.properties" />
+	<property name="src.dir" value="${basedir}/src/main/java" />
+	<property name="java.lib.dir" value="${env.JAVA_HOME}/lib" />
+	<property name="classes.dir" value="${basedir}/target/classes" />
+	<property name="dist.dir" value="${basedir}/target" />
+	<property name="project.lib.dir" value="${basedir}/lib" />
+	<property name="localpath.dir" value="${basedir}" />
+	<property name="remote.host" value="192.168.206.151"/>
+	<property name="remote.username" value="kdcloud"/>
+	<property name="remote.password" value="kdhadoop"/>
+	<property name="remote.home" value="~"/>
+	<property name="jar.name" value="hadoop-0.0.1-SNAPSHOT.jar"/>
+	<!--每次需要知道的main类，写到这里-->
+	<property name="main.class" value="group.GroupApp"/>
+
+	
+
+	
+	
+	<!--上传到服务器
+	**需要把lib目录下的jsch-0.1.51拷贝到$ANT_HOME/lib下，如果是Eclipse下的Ant环境必须在Window->Preferences->Ant->Runtime->Classpath中加入jsch-0.1.51。
+	-->
+	<target name="ssh" >
+		<scp file="${dist.dir}/${jar.name}" todir="${remote.username}@${remote.host}:${remote.home}" password="${remote.password}" trust="true"/>
+	</target>
+	
+	<target name="sshexec" depends="ssh">
+	      <sshexec host="${remote.host}" username="${remote.username}"  password="${remote.password}" trust="true" command="source /etc/profile; hadoop jar ${remote.home}/${jar.name} ${main.class}"/>
+	</target>
+</project>
