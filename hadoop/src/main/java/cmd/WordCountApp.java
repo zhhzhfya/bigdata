@@ -21,9 +21,18 @@ public class WordCountApp extends Configured implements Tool{
 	
 	@Override
 	public int run(String[] arg0) throws Exception {
-		INPUT_PATH = arg0[0];
-		OUT_PATH = arg0[1];
-		
+//		INPUT_PATH = arg0[0];
+//		OUT_PATH = arg0[1];
+
+		//执行命令
+		//hadoop jar CopyOfMapReduceJob.jar /service/kdps/user/app_200201/workspace/data  /service/kdps/user/app_200201/workspace/result0713
+		if(arg0.length>1){
+			INPUT_PATH = arg0[0];
+			OUT_PATH = arg0[1];
+		}else {
+			INPUT_PATH = "/service/kdps/user/app_200201/workspace/data";
+			OUT_PATH = "/service/kdps/user/app_200201/workspace/result0713";
+		}
 		Configuration conf = new Configuration();
 		final FileSystem fileSystem = FileSystem.get(new URI(INPUT_PATH), conf);
 		final Path outPath = new Path(OUT_PATH);
